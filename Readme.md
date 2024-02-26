@@ -16,3 +16,5 @@ npm i -D nodemon
 },
 
 that go to src and run index.js
+
+#don't write an object in dotenv.config it will through an error of "Invalid Schema"
