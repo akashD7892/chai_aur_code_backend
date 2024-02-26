@@ -17,4 +17,8 @@ npm i -D nodemon
 
 that go to src and run index.js
 
-#don't write an object in dotenv.config it will through an error of "Invalid Schema"
+# don't write an object in dotenv.config it will through an error of "Invalid Schema"
+
+#in express we have documentation of request and response in API Documentation -> 5x beta
+
+_" CORS ORIGIN\*_ " \* -> from any frontend user can request
