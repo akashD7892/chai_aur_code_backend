@@ -22,3 +22,10 @@ that go to src and run index.js
 #in express we have documentation of request and response in API Documentation -> 5x beta
 
 _" CORS ORIGIN\*_ " \* -> from any frontend user can request
+
+#to make username more efficiently searchable add [ index:true ]
+
+#mongoose-aggregate-paginate-v2 in mongoose for optimising searching
+
+#bcrypt ( library for Nodejs )
+#bcryptjs ( optimised bcrypt in plain JS with zero dependencies. Compatible with bcrypt)
