@@ -29,3 +29,9 @@ _" CORS ORIGIN\*_ " \* -> from any frontend user can request
 
 #bcrypt ( library for Nodejs )
 #bcryptjs ( optimised bcrypt in plain JS with zero dependencies. Compatible with bcrypt)
+
+# cloudinary and multer
+
+#we have first save our file in local storage through multer and then uploaded to cloudinary why ?
+if we directly upload to cloudinary then it might be a chance it may take time and due to server error it doesnt get uploaded .
+#so firstly we upload that in local storage so that if connection get lost file can be uplaoded
