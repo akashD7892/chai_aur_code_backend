@@ -21,4 +21,10 @@ app.use(express.static("public")) ;
 // to add crud operation on cookies of client
 app.use(cookieParser()) ;
 
-export {app} 
+//routes import 
+import userRouter from './routes/user.routes.js'
+
+//routes decalaration "api/v1/users/register"
+app.use("/users", userRouter)
+
+export {app} ;
