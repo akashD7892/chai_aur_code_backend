@@ -35,3 +35,7 @@ _" CORS ORIGIN\*_ " \* -> from any frontend user can request
 #we have first save our file in local storage through multer and then uploaded to cloudinary why ?
 if we directly upload to cloudinary then it might be a chance it may take time and due to server error it doesnt get uploaded .
 #so firstly we upload that in local storage so that if connection get lost file can be uplaoded
+
+#we get data from form, json object in req.body, also we get data in url.
+
+#upload fails in cloudinary when i use .env otherwise hardcoded value gives correct uploading

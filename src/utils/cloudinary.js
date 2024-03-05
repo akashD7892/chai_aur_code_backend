@@ -3,9 +3,9 @@ import fs from 'fs' ;
 
           
 cloudinary.config({ 
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY, 
-  api_secret: process.env.CLOUDINARY_API_SECRET 
+  cloud_name: 'dg9bclwez', 
+  api_key: '934347335868684', 
+  api_secret: 'eDCBC0_2u9OTgbdRPKVyGFM70hE' 
 });
 
 const uploadOnCloudinary = async(localFilepath) => {
@@ -17,15 +17,17 @@ try{
     // upload file in cloudinary
     const resp = await cloudinary.uploader.upload
     (localFilepath, {
-        resource_type:"auto"
+      resource_type:"auto"
     })
 
     // file has been uploaded successfully
     console.log("file is uploaded on cloudinary", resp.url) ;
+    fs.unlinkSync(localFilepath) ;
     return resp ;
 
   } catch(err) {
     // if server unable to upload then unlink the file 
+    console.log("Unable to uload in cloudinary",err)
     fs.unlinkSync(localFilepath) ;
     return null ;
   }

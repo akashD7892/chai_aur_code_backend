@@ -3,7 +3,10 @@ import express from 'express'
 import { connectDB } from './db/index.js'
 import { app } from './app.js';
 
-dotenv.config()
+//was showing error as it is .env not env just
+dotenv.config({
+   path:'./.env'
+})
 
 connectDB() 
 .then( () => {
