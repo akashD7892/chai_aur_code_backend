@@ -4,6 +4,25 @@ import { User } from '../models/user.model.js';
 import { uploadOnCloudinary } from '../utils/cloudinary.js'; 
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+const generateAccessAndRefreshTokens = async(userId) =>{
+    try{
+       
+        const user = await User.findById(userId)
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+
+        user.refreshToken = refreshToken ;
+        // as we are only introducing token it will ask for password so skip validate part 
+        await user.save({ validateBeforeSave: false}) ;
+
+        return {accessToken,refreshToken} ;
+
+    } catch(err) {
+        console.log(err) ;
+        throw new ApiError(500, "Something went wrong while generating refresh and access token")
+    }
+}
+
 const registerUser = asyncHandler( async(req,resp) => {
     // get user details from frontend
     // validate - not empty
@@ -78,4 +97,85 @@ const registerUser = asyncHandler( async(req,resp) => {
 
 })
 
-export {registerUser} ;
+const loginUser = asyncHandler( async( req,resp) => {
+   //req.body->data
+   //username or email
+   //find user
+   //password check
+   //access and refresh token
+   //send cookies 
+
+   const {email,username,password} = req.body ;
+   
+   if( !(username || email) ) {
+    throw new ApiError(400,"username or password is required") ;
+   } 
+
+   const user = await User.findOne({
+     $or:[ { username } ,{ email } ]
+   })
+
+   if( !user ) {
+    throw new ApiError(404,"User doesnt exist")
+   } 
+
+   //check password after decrypt
+   const isPasswordValid = await user.isPasswordCorrect(password) ;
+   
+   if( !isPasswordValid ) {
+    throw new ApiError(401, "Invalid user credentials") ;
+   } 
+
+   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id) ;
+
+   const loggedInUser = await User.findById(user._id).select("-password -refreshToken") ;
+
+   const options = {
+    httpOnly:true ,
+    secure:true
+   } 
+   
+   // if we have saved the tokens in cookies why sending in client
+   // ans - in case client needs to do somechanges
+   return resp
+   .status(200)
+   .cookie("accessToken", accessToken, options)
+   .cookie("refreshToken", refreshToken, options)
+   .json(
+    new ApiResponse(
+        200,
+        {
+            user:loggedInUser,accessToken,refreshToken
+        },
+        "User logged in successfully"
+    )
+   )
+
+})
+
+const logoutUser = asyncHandler(async(req,resp) => {
+  await User.findByIdAndUpdate(
+    req.user._id ,
+    {
+        $set:{
+            refreshToken:undefined
+        } ,
+        
+    },
+    {
+        new:true
+    }
+  ) 
+
+  const options = {
+    httpOnly:true ,
+    secure:true 
+  } 
+
+  return resp
+  .status(200)
+  .clearCookie("accessToken",options)
+  .clearCookie("refreshToken",options)
+  .json( new ApiResponse(200, {}, "User logged out")) ;
+})
+export {registerUser, loginUser, logoutUser} ;
